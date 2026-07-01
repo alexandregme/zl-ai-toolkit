@@ -8,10 +8,17 @@ description: Full project validation — checks toolkit auto-update, sets up per
 **Execution discipline (applies to every agent dispatched below).** When you dispatch each agent, instruct it to: run one command at a time — NO `;`/`&&`/`|` chaining and NO `echo`/exit-code tricks (chained commands trip permission prompts); read each command's own output. The runners are read-only; only `installer` and the permission setup may modify files.
 
 ## 1. Toolkit auto-update (config check)
-Before anything else, make sure the toolkit will keep itself current:
-- Read `~/.claude/settings.json` and look at `extraKnownMarketplaces["zl-ai-toolkit"]`.
-- If it has `"autoUpdate": true`: report "on" — nothing to do.
-- If `autoUpdate` is **missing or `false`**: tell the user new toolkit versions won't install automatically, and **offer to add `"autoUpdate": true`** to that marketplace entry. **Ask before editing** (it's the user's global `~/.claude/settings.json`); merge into the existing object — never replace other keys or other marketplaces.
+Before anything else, make sure the toolkit will keep itself current. Read `~/.claude/settings.json` → `extraKnownMarketplaces["zl-ai-toolkit"]`, then:
+
+- **Already `"autoUpdate": true`** → report "on" and continue.
+- **`autoUpdate` missing/`false`, OR the `zl-ai-toolkit` entry is absent entirely** → the toolkit won't auto-update. **Do NOT just flag it and move on — ask the user right here** whether to enable it. If they agree, add/complete the entry (create it if absent):
+  ```json
+  "zl-ai-toolkit": {
+    "source": { "source": "github", "repo": "alexandregme/zl-ai-toolkit" },
+    "autoUpdate": true
+  }
+  ```
+  Merge into the existing `extraKnownMarketplaces` object — never replace other keys or other marketplaces. If the user declines, note it and continue.
 - Note for the user: auto-update installs new versions at Claude Code **startup (a full restart)**, not on `/reload-plugins`.
 
 ## 2. Ensure permissions
