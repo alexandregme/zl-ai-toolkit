@@ -14,7 +14,7 @@ Marketplace repo for the **zl** Claude Code plugin. The plugin bundles agents an
 - **Agents are self-contained and minimal.** Each runner names the single command it may run (`pnpm test`/`lint`/`build`) so it stays disciplined even when dispatched standalone — no splitting `pnpm lint` into `pnpm eslint`, no chaining. `project-check` repeats this discipline when it orchestrates them, and `installer` carries its own (it writes and is often run alone).
 - **Read-only agents never edit files or run git.** Only `installer` (pnpm build-approval config), `fix-scripts`, and `setup-permissions` write.
 - **Assume pnpm.**
-- `permissions` in `.claude/settings.json` hot-reload — no restart needed after `setup-permissions`.
+- `permissions` in `.claude/settings.json` hot-reload for the main thread, but a **subagent** keeps the permission snapshot from session start — so rules that `setup-permissions` **creates from scratch** this session reach the installer/runners only after a reload. Appending to a file that already existed needs no reload. `project-check` pauses for that reload on the first-run create.
 
 ## Releases
 No `version` in the manifest → every `git push` to the repo publishes a new commit SHA that auto-updates for installed users.
