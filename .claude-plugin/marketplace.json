@@ -1,0 +1,11 @@
+{
+  "name": "zl-ai-toolkit",
+  "owner": { "name": "Alexandre Mendes", "email": "alexandregme@gmail.com" },
+  "plugins": [
+    {
+      "name": "zl",
+      "source": "./plugins/zl",
+      "description": "Agents and skills to validate pnpm projects (test/lint/build runners, package-check, installer, and the zl-project-check flow)."
+    }
+  ]
+}
