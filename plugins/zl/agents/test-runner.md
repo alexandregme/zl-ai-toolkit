@@ -1,5 +1,5 @@
 ---
-name: zl-test-runner
+name: test-runner
 description: Runs the test suite (pnpm test) and reports failures. Read-only. Use after code changes to validate.
 color: pink
 tools: Read, Bash

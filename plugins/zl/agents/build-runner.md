@@ -1,5 +1,5 @@
 ---
-name: zl-build-runner
+name: build-runner
 description: Runs the project build (pnpm build) and reports pass/fail with errors. Read-only. Use to validate the build after changes.
 color: pink
 tools: Read, Bash

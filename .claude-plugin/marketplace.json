@@ -5,7 +5,7 @@
     {
       "name": "zl",
       "source": "./plugins/zl",
-      "description": "Agents and skills to validate pnpm projects (test/lint/build runners, package-check, installer, and the zl-project-check flow)."
+      "description": "Agents and skills to validate pnpm projects (test/lint/build runners, package-check, installer, and the project-check flow)."
     }
   ]
 }

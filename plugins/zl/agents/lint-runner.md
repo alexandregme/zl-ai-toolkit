@@ -1,5 +1,5 @@
 ---
-name: zl-lint-runner
+name: lint-runner
 description: Runs lint and type checks (pnpm lint) and reports errors. Read-only. Use to check types/lint/format after changes.
 color: pink
 tools: Read, Bash

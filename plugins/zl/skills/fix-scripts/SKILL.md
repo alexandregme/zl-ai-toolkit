@@ -1,14 +1,14 @@
 ---
-name: zl-fix-scripts
-description: Adds or fixes the standard test, lint, and build scripts in package.json (pnpm project). Use when zl-package-check reports missing or non-standard scripts.
+name: fix-scripts
+description: Adds or fixes the standard test, lint, and build scripts in package.json (pnpm project). Use when package-check reports missing or non-standard scripts.
 ---
 
-# zl-fix-scripts — Fix package.json scripts
+# fix-scripts — Fix package.json scripts
 
 Ensure the project's `package.json` has the scripts below. Add missing ones; for existing ones that differ, show the diff and ask before overwriting.
 
 - `test`: `vitest run --coverage`
-- `lint`: `tsc --noEmit && eslint . && prettier --check .` — **check-only** (must NOT auto-fix, so `zl-lint-runner` stays read-only)
+- `lint`: `tsc --noEmit && eslint . && prettier --check .` — **check-only** (must NOT auto-fix, so `lint-runner` stays read-only)
 - `lint:fix`: `eslint . --fix && prettier --write .` — the writing variant, kept separate
 - `build`: **project-specific** (Storybook, Vite, Next.js, tsc, tsup…). Detect from dependencies or ask the owner; never guess silently.
 

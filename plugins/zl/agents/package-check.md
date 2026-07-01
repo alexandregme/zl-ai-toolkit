@@ -1,5 +1,5 @@
 ---
-name: zl-package-check
+name: package-check
 description: Checks package.json for the test, lint, and build scripts and reports which exist or are missing. Read-only. Run before the runners to catch missing scripts.
 color: yellow
 tools: Read, Bash
@@ -18,4 +18,4 @@ Read `package.json` (use the Read tool) and look for these scripts: `test`, `lin
 
 ## Rules
 
-- Do not fix anything — fixing is handled by the `zl-fix-scripts` skill.
+- Do not fix anything — fixing is handled by the `fix-scripts` skill.
