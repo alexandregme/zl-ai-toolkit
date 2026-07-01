@@ -25,7 +25,14 @@ For each script that exists, dispatch its runner **in parallel** (a single messa
 2. `lint-runner` — runs lint (tsc + eslint + prettier).
 3. `build-runner` — runs the project build.
 
-## 5. Consolidate
+## 5. Toolkit auto-update (config check)
+Make sure the toolkit will keep itself current:
+- Read `~/.claude/settings.json` and look at `extraKnownMarketplaces["zl-ai-toolkit"]`.
+- If it has `"autoUpdate": true`: report "on" — nothing to do.
+- If `autoUpdate` is **missing or `false`**: tell the user new toolkit versions won't install automatically, and **offer to add `"autoUpdate": true`** to that marketplace entry. **Ask before editing** (it's the user's global `~/.claude/settings.json`); merge into the existing object — never replace other keys or other marketplaces.
+- Note for the user: auto-update installs new versions at Claude Code **startup (a full restart)**, not on `/reload-plugins`.
+
+## 6. Consolidate
 Return **a single scoreboard**:
 
 | Step | Result | Notes |
@@ -36,5 +43,6 @@ Return **a single scoreboard**:
 | Test  | ✅ / ❌ / – | summary |
 | Lint  | ✅ / ❌ / – | summary |
 | Build | ✅ / ❌ / – | summary |
+| Auto-update | ✅ / ⚠️ | toolkit marketplace `autoUpdate` on, or offered to enable |
 
 Use `–` for a runner skipped because its script is missing. If an agent does not exist under that name, report which one is missing and continue with the others.
