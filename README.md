@@ -18,9 +18,10 @@ Colors group the agents in the terminal: read-only runners are pink, `package-ch
 | `installer` 🩵 | `pnpm install` + approves ignored build scripts | **write** |
 
 ### Skills
-- `project-check` — full validation: permissions → install → check scripts → test/lint/build scoreboard.
-- `setup-permissions` — allowlists the runner commands in `.claude/settings.json`. Appending to an existing file takes effect live; the **first-run create** (file didn't exist) needs one session reload before the subagents see the new rules.
+- `project-check` — full validation: auto-update check → permissions → install → check scripts → test/lint/build scoreboard → capture new permissions.
+- `setup-permissions` — allowlists the runner commands in `.claude/settings.json`. Appending to an existing file takes effect live; the **first-run create** (file didn't exist) needs one restart before the subagents see the new rules.
 - `fix-scripts` — adds/fixes the test/lint/build scripts in `package.json`.
+- `capture-permissions` — at the end of a run, records any permission that got prompted (and wasn't already allowed) into `.claude/settings.local.json` (local/gitignored), so the next run doesn't prompt.
 
 Among the agents, only `installer` writes (see the **Access** column). Two skills also modify files: `setup-permissions` (edits `.claude/settings.json`) and `fix-scripts` (edits `package.json`).
 

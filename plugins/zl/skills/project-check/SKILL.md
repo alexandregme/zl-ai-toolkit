@@ -53,3 +53,6 @@ Return **a single scoreboard**:
 | Build | ✅ / ❌ / – | summary |
 
 Use `–` for a runner skipped because its script is missing. If an agent does not exist under that name, report which one is missing and continue with the others.
+
+## 7. Capture new permissions
+Finally, invoke the `capture-permissions` skill: if any command prompted for permission during this run (and wasn't already allowed), it records the safe ones into `.claude/settings.local.json` so the next run doesn't prompt for them. Report what it captured (or "no new permissions to capture").

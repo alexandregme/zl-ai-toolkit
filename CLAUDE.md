@@ -6,7 +6,7 @@ Marketplace repo for the **zl** Claude Code plugin. The plugin bundles agents an
 - `.claude-plugin/marketplace.json` — marketplace catalog.
 - `plugins/zl/.claude-plugin/plugin.json` — plugin manifest (**no `version`** → version = commit SHA).
 - `plugins/zl/agents/*.md` — subagents: `test-runner`, `lint-runner`, `build-runner`, `package-check`, `installer`.
-- `plugins/zl/skills/*/SKILL.md` — skills: `project-check`, `setup-permissions`, `fix-scripts`.
+- `plugins/zl/skills/*/SKILL.md` — skills: `project-check`, `setup-permissions`, `fix-scripts`, `capture-permissions`.
 
 ## Conventions
 - **Names carry NO prefix** — the plugin namespace does the grouping: skills/agents show as `zl:<name>` (e.g. `zl:project-check`), so typing `zl` in the terminal surfaces the whole toolkit. Do not re-add a `zl-` prefix (it would render as the redundant `zl:zl-...`).

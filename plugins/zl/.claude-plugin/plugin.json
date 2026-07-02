@@ -1,5 +1,5 @@
 {
   "name": "zl",
-  "description": "Runner/check agents (test, lint, build, package-check) plus a write installer, and skills (project-check, setup-permissions, fix-scripts) to validate pnpm projects.",
+  "description": "Runner/check agents (test, lint, build, package-check) plus a write installer, and skills (project-check, setup-permissions, fix-scripts, capture-permissions) to validate pnpm projects.",
   "author": { "name": "Alexandre Mendes", "email": "alexandregme@gmail.com" }
 }
