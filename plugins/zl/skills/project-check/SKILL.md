@@ -55,4 +55,13 @@ Return **a single scoreboard**:
 Use `–` for a runner skipped because its script is missing. If an agent does not exist under that name, report which one is missing and continue with the others.
 
 ## 7. Capture new permissions
-Finally, invoke the `capture-permissions` skill: if any command prompted for permission during this run (and wasn't already allowed), it records the safe ones into `.claude/settings.local.json` so the next run doesn't prompt for them. Report what it captured (or "no new permissions to capture").
+Invoke the `capture-permissions` skill: if any command prompted for permission during this run (and wasn't already allowed), it records the safe ones into `.claude/settings.local.json` so the next run doesn't prompt for them. Report what it captured (or "no new permissions to capture").
+
+## 8. Token report (context saved)
+The install and the test/lint/build ran inside **isolated subagents**, so their verbose command output never entered this conversation — only the short summaries did. As the final step, report the token accounting:
+
+- List each subagent dispatched this run (`installer`, `package-check`, `test-runner`, `lint-runner`, `build-runner`) with the tokens it used — read the number from each subagent's completion line (e.g. `Done (… · 18.2k tokens · …)`). Use `–` for any that was skipped.
+- Sum them for the **total tokens spent across the steps**.
+- Close with the headline: **"≈ <total> tokens kept out of the main context"** — that verbose output ran in the subagents instead of this conversation.
+
+Present it as a small table (step → tokens) plus the one-line total. If a subagent's token count isn't available, say so rather than guessing.
