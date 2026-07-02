@@ -59,15 +59,12 @@ Invoke the `capture-permissions` skill: if any command prompted for permission d
 
 ## 8. Token report
 
-Close with the token accounting, so usage can be tracked over time. **Print the consumption headline FIRST, then the per-component breakdown.**
+Close with the token accounting for the **isolated subagents** — they're the only steps the harness meters per-component. (Skills run inline in the main thread and aren't separately metered, so they're intentionally left out of this report.) Print the headline first, then the per-agent breakdown.
 
-**8a. Consumption headline (first).** Sum the tokens of every metered subagent this run and lead with it:
+**8a. Consumption headline (first).** Sum the tokens of every subagent dispatched this run and lead with it:
 > **≈ `<total>` tokens consumed by the isolated steps — kept out of the main context.**
 
-(Skills and the `project-check` orchestration ran inline in the main thread and aren't separately metered, so they're not in this total.)
-
-**8b. Per-component breakdown (after).** One table — `component · type · tokens · note`:
-- **Agents (subagents — metered):** `installer`, `package-check`, `test-runner`, `lint-runner`, `build-runner`. Read each one's tokens from its completion line (e.g. `Done (… · 18.2k tokens · …)`); use `–` for any that was skipped. Ran in **isolation** → output stayed OUT of this conversation.
-- **Skills (inline — not separately metered):** `setup-permissions`, `capture-permissions`, `fix-scripts` if it ran, and the `project-check` orchestration itself. Mark each `inline (main context)`; do NOT invent a number.
+**8b. Per-agent breakdown (after).** One table — `agent · tokens · note`:
+- `installer`, `package-check`, `test-runner`, `lint-runner`, `build-runner`. Read each one's tokens from its completion line (e.g. `Done (… · 18.2k tokens · …)`); use `–` for any that was skipped.
 
 If a subagent's token count isn't shown in its completion line, say so rather than guessing.
