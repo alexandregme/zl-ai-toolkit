@@ -57,14 +57,17 @@ Use `–` for a runner skipped because its script is missing. If an agent does n
 ## 7. Capture new permissions
 Invoke the `capture-permissions` skill: if any command prompted for permission during this run (and wasn't already allowed), it records the safe ones into `.claude/settings.local.json` so the next run doesn't prompt for them. Report what it captured (or "no new permissions to capture").
 
-## 8. Token report (per agent & skill)
-Close with a **per-component token breakdown**, so usage can be tracked over time. Present one table — `component · type · tokens · note`:
+## 8. Token report
 
-- **Agents (subagents — metered):** `installer`, `package-check`, `test-runner`, `lint-runner`, `build-runner`. Read each one's tokens from its completion line (e.g. `Done (… · 18.2k tokens · …)`); use `–` for any that was skipped. These ran in **isolation**, so their verbose output stayed OUT of this conversation.
-- **Skills (inline — not separately metered):** `setup-permissions`, `capture-permissions`, plus `fix-scripts` if it ran, and this `project-check` orchestration itself. Skills execute in the **main thread**, so the harness does not meter them individually — mark each `inline (main context)`; do NOT invent a number for them.
+Close with the token accounting, so usage can be tracked over time. **Print the consumption headline FIRST, then the per-component breakdown.**
 
-Then two closing lines:
-- **Total agent tokens: ≈ <sum>** — kept out of the main context (the value of running them as isolated subagents).
-- **Skills:** ran inline — their cost is part of this conversation, not separately measured.
+**8a. Consumption headline (first).** Sum the tokens of every metered subagent this run and lead with it:
+> **≈ `<total>` tokens consumed by the isolated steps — kept out of the main context.**
+
+(Skills and the `project-check` orchestration ran inline in the main thread and aren't separately metered, so they're not in this total.)
+
+**8b. Per-component breakdown (after).** One table — `component · type · tokens · note`:
+- **Agents (subagents — metered):** `installer`, `package-check`, `test-runner`, `lint-runner`, `build-runner`. Read each one's tokens from its completion line (e.g. `Done (… · 18.2k tokens · …)`); use `–` for any that was skipped. Ran in **isolation** → output stayed OUT of this conversation.
+- **Skills (inline — not separately metered):** `setup-permissions`, `capture-permissions`, `fix-scripts` if it ran, and the `project-check` orchestration itself. Mark each `inline (main context)`; do NOT invent a number.
 
 If a subagent's token count isn't shown in its completion line, say so rather than guessing.
