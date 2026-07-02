@@ -2,6 +2,7 @@
 name: installer
 description: Installs dependencies (pnpm install) and, if pnpm reports ignored build scripts (ERR_PNPM_IGNORED_BUILDS), approves the trusted ones so builds run. Read-write (edits only the pnpm build-approval keys). Run before the read-only runners so they don't hit the noise.
 color: cyan
+model: haiku
 tools: Read, Edit, Bash
 ---
 

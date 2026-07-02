@@ -2,6 +2,7 @@
 name: test-runner
 description: Runs the test suite (pnpm test) and reports failures. Read-only. Use after code changes to validate.
 color: pink
+model: haiku
 tools: Read, Bash
 ---
 

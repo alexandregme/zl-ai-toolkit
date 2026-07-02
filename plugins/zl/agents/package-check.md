@@ -2,6 +2,7 @@
 name: package-check
 description: Checks package.json for the test, lint, and build scripts and reports which exist or are missing. Read-only. Run before the runners to catch missing scripts.
 color: yellow
+model: haiku
 tools: Read, Bash
 ---
 
