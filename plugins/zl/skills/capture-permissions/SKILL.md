@@ -1,6 +1,6 @@
 ---
 name: capture-permissions
-description: The final step of project-check — records any permission that got prompted while project-check was running (and wasn't already allowed) into .claude/settings.local.json, so the next run doesn't prompt again. Scoped to the project-check run, not the whole session. Local/gitignored — never touches the shared settings.json.
+description: The final step of project-check — records any permission that got prompted while project-check was running (and wasn't already allowed) into .claude/settings.local.json, so the next run doesn't prompt again. Scoped to the project-check run, not the whole session. Writes only the local, per-user settings.local.json — never touches the shared settings.json.
 ---
 
 # capture-permissions — Persist permissions prompted during project-check
@@ -9,7 +9,7 @@ Run this as the **final step of a `project-check`**. Its job: capture the permis
 
 **Scope: the project-check run only** — the commands the flow itself issued (installer, runners, the auto-update config read/edit, package-check). Do NOT sweep unrelated permissions the user approved elsewhere in the session; only what THIS project-check triggered.
 
-Why `settings.local.json` (not `settings.json`): these are run-discovered, personal overrides. They belong in the **local, gitignored** file — not the shared toolkit rules that `setup-permissions` manages in `settings.json`.
+Why `settings.local.json` (not `settings.json`): these are run-discovered, personal overrides. They belong in the **local, per-user** file (`settings.local.json`, which Claude Code keeps out of source control) — not the shared toolkit rules that `setup-permissions` manages in `settings.json`.
 
 ## Steps
 
@@ -17,7 +17,7 @@ Why `settings.local.json` (not `settings.json`): these are run-discovered, perso
 2. For each, derive a **minimal, generalizable** allow rule — e.g. `Bash(pnpm build:*)`, `Read(~/.claude/settings.json)`, `Edit(...)`. Prefer a prefix pattern (`:*`) over a one-shot exact command.
 3. **Filter — only capture safe, repeatable rules.** Skip anything one-off, destructive (`rm`, `git push`, `curl` to arbitrary hosts), or that could carry secrets. If a prompted command looks unsafe, list it for the user instead of writing it.
 4. Read `.claude/settings.local.json` (create `{ "permissions": { "allow": [] } }` if missing). Add each new rule to `permissions.allow`; **keep existing entries**, and do **not** duplicate a rule already present in `settings.local.json` OR `settings.json`.
-5. Report a short list of what you added to `settings.local.json` (and note it's local/gitignored — not committed).
+5. Report a short list of what you added to `settings.local.json` (and note it's the local, un-committed file — not the shared `settings.json`).
 
 If nothing was prompted during the run, report **"no new permissions to capture"** and do nothing.
 

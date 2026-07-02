@@ -21,11 +21,18 @@ Colors group the agents in the terminal: read-only runners are pink, `package-ch
 - `project-check` — full validation: auto-update check → permissions → install → check scripts → test/lint/build scoreboard → capture new permissions.
 - `setup-permissions` — allowlists the runner commands in `.claude/settings.json`. Appending to an existing file takes effect live; the **first-run create** (file didn't exist) needs one restart before the subagents see the new rules.
 - `fix-scripts` — adds/fixes the test/lint/build scripts in `package.json`.
-- `capture-permissions` — at the end of a run, records any permission that got prompted (and wasn't already allowed) into `.claude/settings.local.json` (local/gitignored), so the next run doesn't prompt.
+- `capture-permissions` — at the end of a run, records any permission that got prompted during it (and wasn't already allowed) into `.claude/settings.local.json` (Claude Code's personal, un-committed settings file), so the next run doesn't prompt.
 
-Among the agents, only `installer` writes (see the **Access** column). Two skills also modify files: `setup-permissions` (edits `.claude/settings.json`) and `fix-scripts` (edits `package.json`).
+Among the agents, only `installer` writes (see the **Access** column). Three skills also modify files: `setup-permissions` (edits `.claude/settings.json`), `fix-scripts` (edits `package.json`), and `capture-permissions` (edits `.claude/settings.local.json`).
 
 ## Install
+
+**Prerequisite — private repo over SSH.** Claude Code clones the marketplace over HTTPS, which fails for a private repo with no stored credentials (`fatal: unable to get password from user`). Tell git to use your GitHub SSH key once:
+
+    git config --global url."git@github.com:".insteadOf "https://github.com/"
+
+Then:
+
     /plugin marketplace add alexandregme/zl-ai-toolkit
     /plugin install zl@zl-ai-toolkit --scope user
     /reload-plugins
