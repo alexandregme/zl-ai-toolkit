@@ -1,6 +1,6 @@
 # zl-ai-toolkit
 
-Private marketplace with the **zl** plugin for Claude Code. Type `/zl` in the terminal to see the whole toolkit.
+Private marketplace with the **zl** plugin for Claude Code. Type `zl` in the terminal to see the whole toolkit.
 
 ## Plugin `zl`
 
