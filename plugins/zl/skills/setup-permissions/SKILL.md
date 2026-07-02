@@ -16,10 +16,8 @@ Required allow rules:
 - `Bash(npx tsc:*)`
 - `Bash(npx eslint:*)`
 - `Bash(npx prettier:*)`
-- `Read(<HOME>/.claude/settings.json)` — the `project-check` auto-update step reads the user's global settings; without this, reading a file outside the project prompts.
-- `Edit(<HOME>/.claude/settings.json)` — the same step may add the `autoUpdate` entry.
-
-Replace `<HOME>` with the **absolute** home path (resolve `$HOME`, e.g. `/Users/alex`) — permission globs do NOT expand `~`.
+- `Read(~/.claude/settings.json)` — the `project-check` auto-update step reads the user's global settings; without this, reading a file outside the project prompts.
+- `Edit(~/.claude/settings.json)` — the same step may add the `autoUpdate` entry.
 
 Steps:
 1. Read `.claude/settings.json`. **Note whether it already existed** — if it is missing you will create it (`{ "permissions": { "allow": [] } }`).
