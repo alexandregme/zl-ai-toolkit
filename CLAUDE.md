@@ -18,7 +18,7 @@ Marketplace repo for the **zl** Claude Code plugin. The plugin bundles agents an
 - `permissions` in `.claude/settings.json` hot-reload for the main thread, but a **subagent** keeps the permission snapshot from session start — so rules that `setup-permissions` **creates from scratch** this session reach the installer/runners only after a reload. Appending to a file that already existed needs no reload. `project-check` pauses for that reload on the first-run create.
 
 ## Releases
-No `version` in the manifest → every `git push` to the repo publishes a new commit SHA that auto-updates for installed users.
+No `version` in the manifest → every `git push` publishes a new commit SHA. Installed users get it on demand via `/plugin update zl@zl-ai-toolkit`, or automatically at startup **only if** they set `autoUpdate: true` for the marketplace in `~/.claude/settings.json` (off by default for private marketplaces).
 
 ## Commit rules
 - Conventional commits. NO co-author / "Generated with" lines. Clean messages.

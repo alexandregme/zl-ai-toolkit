@@ -53,6 +53,6 @@ To stay up to date automatically, enable auto-update once in `~/.claude/settings
 }
 ```
 
-At each startup Claude Code then detects a newer commit and prompts you to run `/reload-plugins`.
+At each startup Claude Code then detects a newer commit and updates the plugin — you may be prompted to run `/reload-plugins` to load it into the running session.
 
-**Manual update** (without auto-update): `/plugin marketplace update zl-ai-toolkit` → `/plugin uninstall zl@zl-ai-toolkit` → `/plugin install zl@zl-ai-toolkit` → `/reload-plugins`.
+**Manual update** (without auto-update): `/plugin update zl@zl-ai-toolkit` → `/reload-plugins`.
