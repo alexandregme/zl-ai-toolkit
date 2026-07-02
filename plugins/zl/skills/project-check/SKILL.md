@@ -24,7 +24,7 @@ Before anything else, make sure the toolkit will keep itself current. Read `~/.c
 ## 2. Ensure permissions
 Invoke the `setup-permissions` skill so the runner commands are allowed.
 - If it reports **"✅ permissions ready — no reload needed"** (rules already present, or appended to a file that already existed), continue to step 3.
-- If it reports **"⚠️ settings.json was just created"**, **STOP the flow here**: tell the user to reload the session (`/reload` or restart) and re-run `project-check`. Do NOT dispatch the installer/runners on this run — they wouldn't see the new permissions yet and would trigger permission prompts.
+- If it reports **"⚠️ settings.json was just created"**, **STOP the flow here**: tell the user to restart Claude Code (quit and reopen) and re-run `project-check`. Do NOT dispatch the installer/runners on this run — they wouldn't see the new permissions yet and would trigger permission prompts.
 
 ## 3. Install & approve builds
 Dispatch the `installer` agent: run `pnpm install` and, if pnpm reports ignored build scripts, approve them so builds run cleanly. **Note: this may modify the pnpm build-approval config — `allowBuilds` in `pnpm-workspace.yaml` on pnpm 11+, or `onlyBuiltDependencies`/`ignoredBuiltDependencies` on pnpm 10.**
