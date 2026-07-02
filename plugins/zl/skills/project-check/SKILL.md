@@ -57,11 +57,14 @@ Use `–` for a runner skipped because its script is missing. If an agent does n
 ## 7. Capture new permissions
 Invoke the `capture-permissions` skill: if any command prompted for permission during this run (and wasn't already allowed), it records the safe ones into `.claude/settings.local.json` so the next run doesn't prompt for them. Report what it captured (or "no new permissions to capture").
 
-## 8. Token report (context saved)
-The install and the test/lint/build ran inside **isolated subagents**, so their verbose command output never entered this conversation — only the short summaries did. As the final step, report the token accounting:
+## 8. Token report (per agent & skill)
+Close with a **per-component token breakdown**, so usage can be tracked over time. Present one table — `component · type · tokens · note`:
 
-- List each subagent dispatched this run (`installer`, `package-check`, `test-runner`, `lint-runner`, `build-runner`) with the tokens it used — read the number from each subagent's completion line (e.g. `Done (… · 18.2k tokens · …)`). Use `–` for any that was skipped.
-- Sum them for the **total tokens spent across the steps**.
-- Close with the headline: **"≈ <total> tokens kept out of the main context"** — that verbose output ran in the subagents instead of this conversation.
+- **Agents (subagents — metered):** `installer`, `package-check`, `test-runner`, `lint-runner`, `build-runner`. Read each one's tokens from its completion line (e.g. `Done (… · 18.2k tokens · …)`); use `–` for any that was skipped. These ran in **isolation**, so their verbose output stayed OUT of this conversation.
+- **Skills (inline — not separately metered):** `setup-permissions`, `capture-permissions`, plus `fix-scripts` if it ran, and this `project-check` orchestration itself. Skills execute in the **main thread**, so the harness does not meter them individually — mark each `inline (main context)`; do NOT invent a number for them.
 
-Present it as a small table (step → tokens) plus the one-line total. If a subagent's token count isn't available, say so rather than guessing.
+Then two closing lines:
+- **Total agent tokens: ≈ <sum>** — kept out of the main context (the value of running them as isolated subagents).
+- **Skills:** ran inline — their cost is part of this conversation, not separately measured.
+
+If a subagent's token count isn't shown in its completion line, say so rather than guessing.
