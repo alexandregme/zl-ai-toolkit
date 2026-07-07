@@ -12,7 +12,7 @@ Colors group the agents in the terminal: read-only runners are pink, `package-ch
 | Agent | Does | Access |
 |---|---|---|
 | `test-runner` 🩷 | runs `pnpm test`, reports failures | read-only |
-| `lint-runner` 🩷 | runs `pnpm lint` (tsc + eslint + prettier) | read-only |
+| `lint-runner` 🩷 | runs `pnpm lint` (tsc + eslint `--fix` + prettier `--write`) — **auto-fixes in place** | read-only agent* |
 | `build-runner` 🩷 | runs `pnpm build`, reports pass/fail | read-only |
 | `package-check` 💛 | checks package.json has test/lint/build scripts | read-only |
 | `installer` 🩵 | `pnpm install` + approves ignored build scripts | **write** |
@@ -23,7 +23,7 @@ Colors group the agents in the terminal: read-only runners are pink, `package-ch
 - `fix-scripts` — adds/fixes the test/lint/build scripts in `package.json`.
 - `capture-permissions` — at the end of a run, records any permission that got prompted during it (and wasn't already allowed) into `.claude/settings.local.json` (Claude Code's personal, un-committed settings file), so the next run doesn't prompt.
 
-Among the agents, only `installer` writes (see the **Access** column). Three skills also modify files: `setup-permissions` (edits `.claude/settings.json`), `fix-scripts` (edits `package.json`), and `capture-permissions` (edits `.claude/settings.local.json`).
+Among the agents, only `installer` writes files directly (via the Edit tool). `lint-runner` (\*) never hand-edits, but its `pnpm lint` script auto-fixes in place (eslint `--fix` / prettier `--write`), so a lint run can change the working tree. Three skills also modify files: `setup-permissions` (edits `.claude/settings.json`), `fix-scripts` (edits `package.json`), and `capture-permissions` (edits `.claude/settings.local.json`).
 
 ## Install
 
