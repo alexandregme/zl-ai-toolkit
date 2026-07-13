@@ -1,5 +1,5 @@
 {
   "name": "zl",
-  "description": "Runner/check agents (test, lint, build, package-check) plus a write installer, and skills (project-check, setup-permissions, fix-scripts, capture-permissions) to validate pnpm projects.",
+  "description": "Runner/check agents (test, lint, build, package-check) plus a write installer, and skills (project-check, setup-permissions, fix-scripts, capture-permissions) to validate pnpm projects — plus a Codex+Claude code-review skill (agents codex-handoff, claude-reviewer, review-merger; readiness via codex-check) and git write agents commit + pr.",
   "author": { "name": "Alexandre Mendes", "email": "alexandregme@gmail.com" }
 }
