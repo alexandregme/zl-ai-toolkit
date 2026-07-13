@@ -1,26 +1,29 @@
 ---
 name: codex-check
-description: Readiness check for the Codex (OpenAI) integration — verifies the codex plugin is installed AND that Codex is logged in, before any handoff. Reused by codex-handoff (and runnable on its own). A single, extensible place to grow pre-review checks over time.
+description: Readiness check for the Codex (OpenAI) integration — verifies the codex plugin is installed AND that Codex is logged in, before any handoff. Reused by codex-handoff and run inline as the gate of the dual-review skill (also runnable on its own). A single, extensible place to grow pre-review checks over time.
 ---
 
 # codex-check — is Codex ready?
 
-The one place that answers "can we hand a review to Codex right now?". Run its check, read the `STATUS=` line, and act on it. Designed to be **extended** — add more readiness checks here over time (extra tooling, repo state, config), each emitting its own status line.
+The one place that answers "can we hand a review to Codex right now?". Run the check, read the `STATUS=` line, and act on it. Designed to be **extended** — add more readiness checks to the script over time (extra tooling, repo state, config), each emitting its own status line.
 
 ## The check
 
-Run this once. It **always** prints a `STATUS=` line and a `COMPANION=` line — even when `setup --json` fails or emits non-JSON (that's the point: no silent dead-ends). It uses a glob (not `ls` parsing) so paths with spaces don't word-split, and guards the JSON parse in a try/catch:
+The logic lives in the plugin script `scripts/codex.sh` (single source of truth — the `codex-handoff` agent runs the same file). It **always** prints a `STATUS=` line and a `COMPANION=` line — even when `setup --json` fails or emits non-JSON (that's the point: no silent dead-ends).
+
+Run this once (the fallback resolves the installed copy — newest by mtime, since the cache keys versions by commit SHA — for contexts where `CLAUDE_PLUGIN_ROOT` isn't set):
 
 ```bash
-COMPANION=""
-for p in ~/.claude/plugins/cache/openai-codex/codex/*/scripts/codex-companion.mjs; do [ -f "$p" ] && COMPANION="$p"; done
-[ -z "$COMPANION" ] && [ -f ~/.claude/plugins/marketplaces/openai-codex/plugins/codex/scripts/codex-companion.mjs ] && COMPANION="$HOME/.claude/plugins/marketplaces/openai-codex/plugins/codex/scripts/codex-companion.mjs"
-if [ -z "$COMPANION" ]; then echo "STATUS=NOT_INSTALLED"; echo "COMPANION="; exit 0; fi
-OUT=$(node "$COMPANION" setup --json 2>/dev/null) || { echo "STATUS=CLI_UNAVAILABLE|setup-failed"; echo "COMPANION=$COMPANION"; exit 0; }
-STATUS=$(CODEX_SETUP_JSON="$OUT" node -e 'try{const j=JSON.parse(process.env.CODEX_SETUP_JSON||"{}");if(!j.codex||!j.codex.available){console.log("STATUS=CLI_UNAVAILABLE|"+((j.codex&&j.codex.detail)||""));}else if(!j.auth||!j.auth.loggedIn){console.log("STATUS=NOT_LOGGED_IN");}else{console.log("STATUS=READY|"+(j.auth.detail||"logged in"));}}catch(e){console.log("STATUS=CLI_UNAVAILABLE|parse-error");}' 2>/dev/null)
-[ -z "$STATUS" ] && STATUS="STATUS=CLI_UNAVAILABLE|no-output"
-echo "$STATUS"
-echo "COMPANION=$COMPANION"
+unsetopt nomatch 2>/dev/null || true
+SCRIPT="${CLAUDE_PLUGIN_ROOT:-}/scripts/codex.sh"
+if [ ! -f "$SCRIPT" ]; then
+  SCRIPT=""
+  for p in ~/.claude/plugins/cache/zl-ai-toolkit/zl/*/scripts/codex.sh ~/.claude/plugins/marketplaces/zl-ai-toolkit/plugins/zl/scripts/codex.sh; do
+    [ -f "$p" ] || continue
+    if [ -z "$SCRIPT" ] || [ "$p" -nt "$SCRIPT" ]; then SCRIPT="$p"; fi
+  done
+fi
+if [ -z "$SCRIPT" ]; then echo "STATUS=CLI_UNAVAILABLE|zl-codex-script-not-found"; echo "COMPANION="; else bash "$SCRIPT" check; fi
 ```
 
 ## How to read the result
@@ -39,4 +42,4 @@ Only a `STATUS=READY` **prefix** means proceed. Every other status is a hard sto
 
 ## Extending later
 
-Add new checks below the existing one, each printing its own `STATUS_<name>=...` line, and document how to read it here. Keep every check read-only, and keep the "always emit a status line" guarantee (guard anything that can throw).
+Add new checks to `scripts/codex.sh`'s `check` subcommand, each printing its own `STATUS_<name>=...` line, and document how to read it here. Keep every check read-only, and keep the "always emit a status line" guarantee (guard anything that can throw).
