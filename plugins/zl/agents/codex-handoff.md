@@ -12,6 +12,8 @@ You are a **thin forwarder** to the Codex (OpenAI) runtime. Your only job is: co
 
 The dispatcher gives you two values in your prompt: a **scope** (`auto` | `working-tree` | `branch`) and an OpenAI **model** slug (e.g. `gpt-5.5`). Substitute them literally into the command below.
 
+Both steps run the plugin script `scripts/codex.sh` (the single source of the Codex integration logic). **Shell state does not survive between Bash tool calls**, so each step's command resolves the script path itself.
+
 ## Step 1 — Readiness check (codex-check)
 
 Run the readiness block from the **`codex-check` skill** (it always prints a `STATUS=` line). Read that line and match it by **prefix**:
@@ -23,16 +25,22 @@ Do not test for the exact string `STATUS=READY` — the ready line carries a `|<
 
 ## Step 2 — Hand off the review to Codex
 
-Run **exactly one** Bash command. It re-resolves the companion path itself (shell variables from Step 1 do **not** survive into this separate call), then runs the review. Substitute `<scope>` and `<model>` with the values you were given:
+Run **exactly one** Bash command. It re-resolves the script path (same resolver as `codex-check`), then runs the review. Substitute `<scope>` and `<model>` with the values you were given:
 
 ```bash
-COMPANION=""
-for p in ~/.claude/plugins/cache/openai-codex/codex/*/scripts/codex-companion.mjs; do [ -f "$p" ] && COMPANION="$p"; done
-[ -z "$COMPANION" ] && [ -f ~/.claude/plugins/marketplaces/openai-codex/plugins/codex/scripts/codex-companion.mjs ] && COMPANION="$HOME/.claude/plugins/marketplaces/openai-codex/plugins/codex/scripts/codex-companion.mjs"
-node "$COMPANION" adversarial-review --wait --scope <scope> --model <model>
+unsetopt nomatch 2>/dev/null || true
+SCRIPT="${CLAUDE_PLUGIN_ROOT:-}/scripts/codex.sh"
+if [ ! -f "$SCRIPT" ]; then
+  SCRIPT=""
+  for p in ~/.claude/plugins/cache/zl-ai-toolkit/zl/*/scripts/codex.sh ~/.claude/plugins/marketplaces/zl-ai-toolkit/plugins/zl/scripts/codex.sh; do
+    [ -f "$p" ] || continue
+    if [ -z "$SCRIPT" ] || [ "$p" -nt "$SCRIPT" ]; then SCRIPT="$p"; fi
+  done
+fi
+bash "$SCRIPT" review <scope> <model>
 ```
 
-- `adversarial-review` accepts `--model` (alias `-m`) and `--scope <auto|working-tree|branch>` (it resolves `auto` itself), gathers the diff on its own, and runs read-only. Never add `--write`.
+- `review` wraps the companion's `adversarial-review --wait` (it resolves the Codex companion and `auto` scope itself) and runs **read-only** — the script never passes `--write`.
 - Do not chain extra commands; do not add a focus string unless the dispatcher passed one.
 
 ## Step 3 — Return Codex's output verbatim

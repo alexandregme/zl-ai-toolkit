@@ -7,18 +7,18 @@ description: Full project validation — checks toolkit auto-update, sets up per
 
 **Execution discipline (applies to every agent dispatched below).** When you dispatch each agent, instruct it to: run one command at a time — NO `;`/`&&`/`|` chaining and NO `echo`/exit-code tricks (chained commands trip permission prompts); read each command's own output. The runners are read-only; only `installer` and the permission setup may modify files.
 
-## 1. Toolkit auto-update (config check)
+## 1. Toolkit auto-update (config check — non-interactive)
 Before anything else, make sure the toolkit will keep itself current. Read `~/.claude/settings.json` → `extraKnownMarketplaces["zl-ai-toolkit"]`, then:
 
 - **Already `"autoUpdate": true`** → report "on" and continue.
-- **`autoUpdate` missing/`false`, OR the `zl-ai-toolkit` entry is absent entirely** → the toolkit won't auto-update. **Do NOT just flag it and move on — ask the user right here** whether to enable it. If they agree, add/complete the entry (create it if absent):
+- **`autoUpdate` missing/`false`, OR the `zl-ai-toolkit` entry is absent entirely** → **enable it now, without asking** (the toolkit is expected to always stay current). Add/complete the entry (create it if absent):
   ```json
   "zl-ai-toolkit": {
     "source": { "source": "github", "repo": "alexandregme/zl-ai-toolkit" },
     "autoUpdate": true
   }
   ```
-  Merge into the existing `extraKnownMarketplaces` object — never replace other keys or other marketplaces. If the user declines, note it and continue.
+  Merge into the existing `extraKnownMarketplaces` object — never replace other keys or other marketplaces. **Verify the write landed** (re-read the key after editing); report "enabled now" in the scoreboard and continue — do not pause the flow. If the write fails (file unwritable, malformed JSON), report ❌ with the reason in the scoreboard and continue — a failed enable must not show as ✅ nor block the validation.
 - Note for the user: auto-update installs new versions at Claude Code **startup (a full restart)**, not on `/reload-plugins`.
 
 ## 2. Ensure permissions
@@ -32,19 +32,20 @@ Dispatch the `installer` agent: run `pnpm install` and, if pnpm reports ignored 
 ## 4. Validate scripts
 Dispatch `package-check` to confirm `package.json` has the `test`, `lint`, and `build` scripts. Note any missing — the matching runner below is skipped (report it as "missing script", not a failure). If any script is missing, **offer to run the `fix-scripts` skill to add it, and ask the user before running it** (it writes to `package.json`); do not run `fix-scripts` automatically.
 
-## 5. Run the runners
-For each script that exists, dispatch its runner **in parallel** (a single message with the Agent tool calls):
+## 5. Run the runners — lint first, then test + build in parallel
+`pnpm lint` **auto-fixes in place** (eslint `--fix` / prettier `--write`) — it must never run while test/build are reading the same tree, or a mid-run rewrite causes flaky failures. So, for the scripts that exist:
 
-1. `test-runner` — runs the test suite.
-2. `lint-runner` — runs lint (tsc + eslint + prettier).
-3. `build-runner` — runs the project build.
+1. Dispatch `lint-runner` **alone** and wait for it to finish (its auto-fixes land first).
+2. Then dispatch `test-runner` and `build-runner` **in parallel** (a single message with both Agent tool calls) — both are read-only, so they can share the tree safely.
+
+Skip the runner of any missing script (step 4).
 
 ## 6. Consolidate
 Return **a single scoreboard**:
 
 | Step | Result | Notes |
 |---|---|---|
-| Auto-update | ✅ / ⚠️ | toolkit marketplace `autoUpdate` on, or offered to enable |
+| Auto-update | ✅ / ❌ | toolkit marketplace `autoUpdate` already on / enabled now, or the enable-write failed (say why) |
 | Permissions | ✅ | rules added or already present |
 | Install | ✅ / ❌ | deps OK, or what was approved/changed |
 | Scripts | ✅ / ⚠️ | which of test/lint/build are present or missing |
