@@ -9,7 +9,7 @@ Make sure `.claude/settings.json` `permissions.allow` contains the rules the zl 
 
 Required allow rules:
 - `Bash(pnpm test:*)`
-- `Bash(pnpm lint:*)`
+- `Bash(pnpm lint:*)` — heads up: the standard `lint` script auto-fixes (`eslint . --fix` + `prettier --write`), so pre-allowing this lets a lint run **write to the repo without a prompt**. That silent auto-fix is intended; drop this rule if you want lint edits to prompt.
 - `Bash(pnpm build:*)`
 - `Bash(pnpm install:*)`
 - `Read(~/.claude/settings.json)` — the `project-check` auto-update step reads the user's global settings; without this, reading a file outside the project prompts.
