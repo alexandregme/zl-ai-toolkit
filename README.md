@@ -1,6 +1,6 @@
 # zl-ai-toolkit
 
-Private marketplace with the **zl** plugin for Claude Code. Type `zl` in the terminal to see the whole toolkit.
+Open-source marketplace with the **zl** plugin for Claude Code. Type `zl` in the terminal to see the whole toolkit.
 
 ## Plugin `zl`
 
@@ -34,18 +34,12 @@ Among the agents, `installer` writes files directly (via the Edit tool), and the
 
 ## Install
 
-**Prerequisite — private repo over SSH.** Claude Code clones the marketplace over HTTPS, which fails for a private repo with no stored credentials (`fatal: unable to get password from user`). Tell git to use your GitHub SSH key once:
-
-    git config --global url."git@github.com:".insteadOf "https://github.com/"
-
-Then:
-
     /plugin marketplace add alexandregme/zl-ai-toolkit
     /plugin install zl@zl-ai-toolkit --scope user
     /reload-plugins
 
 ## Auto-update
-The manifest omits `version`, so each `git push` is a new commit SHA — Claude Code treats every commit as a new version. But **auto-update is OFF by default for private marketplaces**, so `/plugin marketplace update` alone only refreshes the catalog, not the installed plugin.
+The manifest omits `version`, so each `git push` is a new commit SHA — Claude Code treats every commit as a new version. But **auto-update is OFF by default for third-party marketplaces**, so `/plugin marketplace update` alone only refreshes the catalog, not the installed plugin.
 
 To stay up to date automatically, enable auto-update once in `~/.claude/settings.json`:
 
