@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `component-composition`: how apps compose zljs components
 - `zljs-check`: validates that an app has zljs wired, in its instruction files and in its setup
 - Versions: the plugin now has a `version`, and each merge to `main` releases a new one from the PR title
+- `ROADMAP.md`, with the review of the configuration
 
 ### Changed
 
