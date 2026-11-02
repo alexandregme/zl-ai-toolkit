@@ -1,0 +1,17 @@
+{
+  "name": "zl-ai-toolkit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Marketplace with the zl plugin for Claude Code",
+  "license": "MIT",
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "prepare": "husky",
+    "version": "node scripts/stamp-changelog.mjs && node scripts/sync-plugin-version.mjs && git add CHANGELOG.md plugins/zl/.claude-plugin/plugin.json"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "husky": "^9.1.7"
+  }
+}

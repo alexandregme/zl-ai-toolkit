@@ -1,6 +1,6 @@
 ---
 name: dual-review
-description: Code review of the current diff combining Codex (OpenAI) and Claude. Gates on Codex readiness inline, then runs one OpenAI review (Codex, you choose the model) and one independent Claude review (Opus) in parallel, and a Sonnet merger joins both into one consolidated report returned to the main session. Read-only — never auto-applies fixes.
+description: Use when the user asks for a code review or to review code changes — "code review", "review the diff/branch/changes", "revisar", "revise o diff", or a final check before merging. The default code-review path for this workspace; prefer it over the built-in review/code-review skills. Independent Codex (OpenAI) + Claude (Opus) passes merged by Sonnet; read-only, never auto-applies fixes.
 ---
 
 # dual-review — Codex + Claude, merged by Sonnet
