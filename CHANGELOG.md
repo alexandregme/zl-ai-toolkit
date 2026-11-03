@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `state-management`: validates the state management of the zljs library: Zustand for state shared by components, in `core/state/zustand`, and Redux for business rules, with the store and `ReduxProvider` in `core/state/redux`; the store stays internal, and tests and stories reuse the mock store. Selectors, thunks and actions have no rules yet
+- `zljs-check`: starts by finding out if the app is a Next.js app and which router it has, and a Next.js app runs the rules in its own file, `nextjs.md`: wrap the root layout in `RootLayout`, take the providers from `AppProviders` instead of a store, `Provider`, `Toaster` or `Loader` of the app's own, and have a 404 page that renders `NotFound` from zljs, in the app's language
+- `zljs-check`: the app must have `@alexandregme/zl-quality-kit` at its latest version, with `prettier.config.mjs` and `stylelint.config.mjs` re-exporting it; a `lint` script that skips `prettier --check` and `stylelint`, or a missing `.stylelintignore` for `coverage` and `.next`, is a warning
+
+### Changed
+
+- `component-check`: a touch target must say how much space its neighbors need, and the rules say how they apply to `Link` and to components exported from `core/next/`
+- `component-check`: a component doesn't know who uses it, so its stories, comments and code can't name a component that renders it
+- `component-check`: a component with no props and no types of its own needs no types file
+
 ## [1.0.1] - 2026-11-02
 
 ### Added
