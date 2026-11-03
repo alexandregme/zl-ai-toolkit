@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `zljs-update`: a `fix-only` mode, which the `zljs-update` GitHub workflow runs after its own update when a check fails. It skips the version change and the baseline, hands every error to `update-fixer`, skips `capture-permissions` (it would write into the repo the workflow commits), never runs git or asks a question, and keeps the token report. The same skill and agent now fix an update locally and on GitHub
+
 ## [1.0.3] - 2026-11-03
 
 ### Added

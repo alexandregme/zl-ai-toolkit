@@ -1,6 +1,7 @@
 ---
 name: zljs-update
-description: Use when updating @alexandregme/zljs and @alexandregme/zl-quality-kit in an app to their latest versions — after a zljs release, when zljs-check reports the app outdated, or when the user asks to update zljs or the quality kit. Updates both, reruns lint, test and build, and hands the errors the update introduced to the update-fixer agent, which fixes the app's code until they close or it runs out of rounds. Leaves everything in the working tree; never commits.
+description: Use when updating @alexandregme/zljs and @alexandregme/zl-quality-kit in an app to their latest versions — after a zljs release, when zljs-check reports the app outdated, or when the user asks to update zljs or the quality kit. Updates both, reruns lint, test and build, and hands the errors the update introduced to the update-fixer agent, which fixes the app's code until they close or it runs out of rounds. With the argument fix-only, as the zljs-update GitHub workflow runs it, it skips the version change and only fixes. Leaves everything in the working tree; never commits.
+argument-hint: "[fix-only]"
 ---
 
 # zljs-update: Update zljs and the quality kit in an app
@@ -9,7 +10,19 @@ Updating is a version change plus whatever it breaks. This skill does the versio
 
 Nothing is committed. The user reviews the diff and commits when ready.
 
-The same two updates also run weekly on GitHub, through the workflows the kit writes into the app (`zl-quality-kit.yml` on Wednesdays, `zljs-update.yml` on Thursdays, both calling `alexandregme/zl-workflows`): they open a PR with the version change and say what broke, but fix nothing. This skill is the local version that also fixes, so it is what to run on a red PR from them, on that branch.
+The same updates also run weekly on GitHub, through the workflows the kit writes into the app (`zl-quality-kit.yml` on Wednesdays, `zljs-update.yml` on Thursdays, both calling `alexandregme/zl-workflows`). The `zljs-update` workflow runs this skill itself, from this plugin, with the argument `fix-only`, after it updates zljs and finds a failing check. Locally and on GitHub it is the same skill and the same `update-fixer`.
+
+## Mode `fix-only`
+
+Run this mode when the argument is `fix-only`, which is how the workflow calls it. The version change is already done, and the caller runs the checks again afterwards and commits.
+
+1. Skip steps 1.2 to 3: no version lookup, no baseline, no `pnpm up`, no `zl-lint init`. There is no "before" on that tree, and its only change is the update.
+2. Take the old and new zljs versions from the caller's prompt; the workflow always gives them. If it doesn't, read the new one from `node_modules/@alexandregme/zljs/package.json` and report the old one as unknown.
+3. Run step 4, then step 6 with every error as the update's: there is no baseline to set apart.
+4. Report as step 7 says, with the Baseline, Install and zl-lint init rows as `–`.
+5. Skip step 8. `capture-permissions` writes `.claude/settings.local.json` into the repo, and the workflow would commit it.
+6. Keep step 9: the token report is how a run's cost shows up.
+7. Never run git, never edit `package.json`, the lockfile or `.github/`, and never ask a question: nobody answers in a workflow. When something blocks, say so in the report and stop.
 
 **Execution discipline (applies to every agent dispatched below).** When you dispatch each agent, instruct it to: run one command at a time — NO `;`/`&&`/`|` chaining and NO `echo`/exit-code tricks (chained commands trip permission prompts); read each command's own output. The runners are read-only; `installer` writes only the pnpm build-approval keys, and `update-fixer` writes only the app's code.
 
