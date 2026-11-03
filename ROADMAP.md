@@ -57,3 +57,5 @@ This list tracks potential improvements. Agents must review and update it when n
 3. `component-check`: say whether an explicit `variant` on an icon-only button needs a story
 4. `component-tests`: drop `toBeInTheDocument` after a `getByRole`, which already fails when the element is missing, and keep `not.toThrow` only for components that call the callback themselves
 5. `component-tests`: decide whether focus classes stay in `Styles`. A story `play` already measures focus, and `Input`, `Select`, `TextArea`, `Radio` and `Error` have class assertions of the kind the maintainer rejected on `Checkbox`
+6. `zljs-check`, `nextjs.md`: `RootLayout` and the 404 page are in. Still to be defined by the maintainer: whether an app must use `AppProviders` and `PageConfig`, and the implementation conventions
+7. `state-management`: Zustand stores, the provider, the store and the mock store are in. Still to be defined by the maintainer: the rules for slices, selectors, thunks and actions (a thunk calls the URL through `HTTPClient`), and whether the Zustand/Redux split is also checked in apps
