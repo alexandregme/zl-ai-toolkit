@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-11-03
+
 ### Added
 
 - `state-management`: validates the state management of the zljs library: Zustand for state shared by components, in `core/state/zustand`, and Redux for business rules, with the store and `ReduxProvider` in `core/state/redux`; the store stays internal, and tests and stories reuse the mock store. Selectors, thunks and actions have no rules yet
@@ -39,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 The state of the plugin before versions: runner agents, `project-check`, `dual-review` and the git agents.
 
-[Unreleased]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/alexandregme/zl-ai-toolkit/releases/tag/v1.0.0
