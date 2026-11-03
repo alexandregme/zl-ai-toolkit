@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `zljs-update`: updates `@alexandregme/zljs` and `@alexandregme/zl-quality-kit` to their latest versions in an app and runs `zl-lint init` when the kit changed. It runs lint, test and build before and after the update, so only the errors the update introduced go to the new `update-fixer` agent (Sonnet, write), which fixes the app's code and reruns the failing command for up to 3 rounds, never silencing an error or changing a version. On the branch of a red PR from the `zljs-update` workflow, where the update is already done, it skips the baseline and hands every error to the fixer. The changes stay in the working tree, with a report of what was fixed, what stayed open and what the app needs from zljs
+- `update-fixer`: a `Migration` note that moves a test's class assertion to a new zljs class is overridden by `component-composition`: the class assertion is deleted, and the test asserts what the user sees
+
 ## [1.0.2] - 2026-11-03
 
 ### Added
