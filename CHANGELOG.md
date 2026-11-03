@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-11-03
+
 ### Added
 
 - `zljs-update`: a `fix-only` mode, which the `zljs-update` GitHub workflow runs after its own update when a check fails. It skips the version change and the baseline, hands every error to `update-fixer`, skips `capture-permissions` (it would write into the repo the workflow commits), never runs git or asks a question, and keeps the token report. The same skill and agent now fix an update locally and on GitHub
@@ -52,7 +54,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 The state of the plugin before versions: runner agents, `project-check`, `dual-review` and the git agents.
 
-[Unreleased]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.0...v1.0.1
