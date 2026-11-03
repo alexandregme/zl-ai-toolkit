@@ -7,7 +7,7 @@ Open Source marketplace with the **zl** plugin for Claude Code. Type `zl` in the
 Agents and skills to validate a **pnpm** project.
 
 ### Agents
-Colors group the agents in the terminal: read-only pnpm runners are pink, `package-check` is yellow, the pnpm writer `installer` is cyan, the Codex+Claude dual-review trio is purple, and the git write agents (`commit`, `pr`) are green.
+Colors group the agents in the terminal: read-only pnpm runners are pink, `package-check` is yellow, the writers `installer` and `update-fixer` are cyan, the Codex+Claude dual-review trio is purple, and the git write agents (`commit`, `pr`) are green.
 
 | Agent | Does | Access |
 |---|---|---|
@@ -16,6 +16,7 @@ Colors group the agents in the terminal: read-only pnpm runners are pink, `packa
 | `build-runner` 🩷 | runs `pnpm build`, reports pass/fail | read-only |
 | `package-check` 💛 | checks package.json has test/lint/build scripts | read-only |
 | `installer` 🩵 | `pnpm install` + approves ignored build scripts | **write** |
+| `update-fixer` 🩵 | Sonnet: fixes the app's code from the errors a zljs / quality-kit update introduced, reruns the failing command, up to 3 rounds; never silences an error or changes a version | **write** (app code) |
 | `codex-handoff` 💜 | Haiku: hands the diff to Codex (OpenAI) for its opinion — checks Codex is installed + logged in first | read-only |
 | `claude-reviewer` 💜 | Opus: independent Claude review of the diff (read-only git) | read-only |
 | `review-merger` 💜 | Sonnet: joins the Codex + Claude reviews into one consolidated report | read-only |
@@ -34,8 +35,9 @@ Colors group the agents in the terminal: read-only pnpm runners are pink, `packa
 - `component-composition` — how an app composes zljs components: named handlers, no color classes, a suggestion for the library when a color is missing, one folder per step or state.
 - `zljs-check` — validates that an app has zljs wired: its `AGENTS.md`/`CLAUDE.md` reach the agent, say the right things about zljs and match the app's real setup. In a Next.js app, it also checks the implementation rules, such as the 404 page. Reports only.
 - `state-management` — validates the state management of the zljs library: Zustand for state shared by components, in `core/state/zustand`, and Redux for business rules, with the store and `ReduxProvider` in `core/state/redux`; the store stays internal, and tests and stories reuse the mock store. Reports only.
+- `zljs-update` — updates `@alexandregme/zljs` and `@alexandregme/zl-quality-kit` to their latest versions in an app, runs `zl-lint init` when the kit changed, and runs lint, test and build before and after, so only the errors the update introduced go to `update-fixer`. On the branch of a red PR from the `zljs-update` workflow, it fixes every error there. Reports what was fixed, what stayed open and what the app needs from zljs. Goes by the errors, not by the changelog: run `zljs-check` after it for the pending migrations. Leaves the changes in the working tree; never commits.
 
-Among the agents, `installer` writes files directly (via the Edit tool), and the green git agents write the repo: `commit` stages + commits (branching off `main` first, never pushing) and `pr` pushes + opens a PR via `gh`. `lint-runner` (\*) never hand-edits, but its `pnpm lint` script auto-fixes in place (eslint `--fix` / prettier `--write`), so a lint run can change the working tree. The dual-review agents are read-only (Codex runs read-only; the Claude reviewers use read-only git only). Three skills also modify files: `setup-permissions` (edits `.claude/settings.json`), `fix-scripts` (edits `package.json`), and `capture-permissions` (edits `.claude/settings.local.json`).
+Among the agents, `installer` and `update-fixer` write files directly (via the Edit tool: the pnpm build-approval keys, and the app's code from an update's error log), and the green git agents write the repo: `commit` stages + commits (branching off `main` first, never pushing) and `pr` pushes + opens a PR via `gh`. `lint-runner` (\*) never hand-edits, but its `pnpm lint` script auto-fixes in place (eslint `--fix` / prettier `--write`), so a lint run can change the working tree. The dual-review agents are read-only (Codex runs read-only; the Claude reviewers use read-only git only). Three skills also modify files: `setup-permissions` (edits `.claude/settings.json`), `fix-scripts` (edits `package.json`), and `capture-permissions` (edits `.claude/settings.local.json`).
 
 ## Install
 
