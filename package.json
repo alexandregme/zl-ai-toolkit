@@ -1,6 +1,6 @@
 {
   "name": "zl-ai-toolkit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "Marketplace with the zl plugin for Claude Code",
   "license": "MIT",

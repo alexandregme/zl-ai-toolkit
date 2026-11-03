@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-11-03
+
 ### Added
 
 - `zljs-update`: updates `@alexandregme/zljs` and `@alexandregme/zl-quality-kit` to their latest versions in an app and runs `zl-lint init` when the kit changed. It runs lint, test and build before and after the update, so only the errors the update introduced go to the new `update-fixer` agent (Sonnet, write), which fixes the app's code and reruns the failing command for up to 3 rounds, never silencing an error or changing a version. On the branch of a red PR from the `zljs-update` workflow, where the update is already done, it skips the baseline and hands every error to the fixer. The changes stay in the working tree, with a report of what was fixed, what stayed open and what the app needs from zljs
@@ -46,7 +48,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 The state of the plugin before versions: runner agents, `project-check`, `dual-review` and the git agents.
 
-[Unreleased]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/alexandregme/zl-ai-toolkit/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/alexandregme/zl-ai-toolkit/releases/tag/v1.0.0
