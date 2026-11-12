@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- `component-tests`: a passing run prints nothing but the summary. A log, a warning or an error in a green run is fixed in the test or the component, never silenced. Vitest hides the output of passing tests from an agent, so the check runs with `--reporter=default`, and the rule says how to fix each source of a React `act(...)` warning and a click on a link with no router
+
 ## [1.0.4] - 2026-11-03
 
 ### Added
