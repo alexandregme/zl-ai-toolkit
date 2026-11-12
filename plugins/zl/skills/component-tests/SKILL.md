@@ -81,6 +81,7 @@ describe("<Button /> - Styles", () => {
 | Test constants | Values reused across tests go in UPPER_SNAKE_CASE constants at the top of the file (or in test-utils when other components need them too) (`const PHONE = "5511999999999"`, `const IPHONE_USER_AGENT = "…"`), so the test body reads as intent. Helpers stay camelCase (`stubUserAgent`). |
 | Component import | Import the component from the library barrel alias, not its file: `import { Button } from "@zljs/core"` (zljs alias in `tsconfig.json` paths, `vitest.config.ts` and `.storybook/main.ts`). It reads like consumer code and proves the component is exported. Internal values that the barrel doesn't export (e.g. `iconNames` from `./icon.const`) stay relative (`./`). zljs enforces it in `eslint.config.js`: `no-restricted-imports` bans `../*` in `*.test.tsx` and `*.stories.tsx`. |
 | Matchers import | If the Vitest setup file already loads `@testing-library/jest-dom/vitest`, don't import jest-dom in the test file. |
+| Clean output | A passing run prints nothing but the summary: no `console.log`, no warning, no error, no stack trace. A message in a green run is a defect in a test or in the component. **An agent doesn't see them by default:** Vitest notices it runs inside one and hides the output of passing tests, so check with `pnpm exec vitest run --project unit --reporter=default`, and the same for `--project storybook`, and look for `stdout |` and `stderr |` blocks. Never hide one (`vi.spyOn(console, "error")` with an empty implementation, a filter in the setup file): find what the test lacks and give it. A React `act(...)` warning means a state update outside `act`, and the fix depends on where it comes from: a store changed by hand, most often the reset in `afterEach` while a modal is still open (`act(() => { useAppStore.setState(appInitialState); })`); a direct call such as `element.focus()` or a hook's async function (`act(() => el.focus())`, `await act(async () => { await result.current.signOut(); })`); or a timer inside a library (`await act(() => new Promise((resolve) => setTimeout(resolve)))`, with a comment saying whose timer it is). In a story, React's `value` without `onChange` warning appears when a `Form` disables the field instead of the field's own `disabled`: pass `onChange={fn()}`. jsdom's `Not implemented: …` means the test reached a browser API jsdom lacks: stub it with a `@test-utils` helper (see Browser APIs). `Not implemented: navigation to another Document` comes from a click on a link with no router: render inside `MockRouteProvider` from `@test-utils`, which gives `next/link` a router that goes nowhere. A component that logs on purpose is the one exception: spy on the console there and assert the call, so the message is tested and stays out of the output. |
 | Coverage | 100% of the component. |
 
 ## Accessibility
@@ -136,7 +137,7 @@ Never make a story pass by silencing it (`a11y: { test: "off" }`, a disabled rul
 
 Fixing a violation follows the same cycle: first the test or story that fails because of it, then the fix.
 
-Done means `pnpm test` and `pnpm test:storybook` both green.
+Done means `pnpm test` and `pnpm test:storybook` both green, with no `stdout |` or `stderr |` block under `--reporter=default` (see Clean output).
 
 ## Common mistakes
 - `import { Name } from "./name"` in the test → `from "@zljs/core"`.
@@ -159,4 +160,6 @@ Done means `pnpm test` and `pnpm test:storybook` both green.
 - Field error asserted only by `getByRole("alert")` → also assert `aria-invalid` and `toHaveAccessibleDescription`.
 - State asserted only when on (`aria-current`) → also assert it is absent when off.
 - Toast, modal or filtered state with no story → axe never sees it; show it in a story, using `play` if it needs a click.
+- A green run with messages in it (`Not implemented: navigation to another Document`, an `act(...)` warning, a leftover `console.log`) → fix what the test lacks (`MockRouteProvider`, a `@test-utils` stub, `act` around the update) or remove the log; never silence the console.
+- "The run printed nothing" checked with the reporter an agent gets → it hides the logs of passing tests; run with `--reporter=default`.
 - Contrast "tested" with `toHaveClass` → the story proves contrast, not the class name.
