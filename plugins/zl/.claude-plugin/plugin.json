@@ -1,6 +1,6 @@
 {
   "name": "zl",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Runner/check agents (test, lint, build, package-check) plus a write installer, and skills (project-check, setup-permissions, fix-scripts, capture-permissions) to validate pnpm projects — plus a Codex+Claude dual-review skill (agents codex-handoff, claude-reviewer, review-merger; readiness via codex-check) and git write agents commit + pr — and skills for component work with zljs (component-tests, component-check, component-composition, zljs-check, state-management) and a zljs-update skill that updates zljs + zl-quality-kit in an app and fixes what broke through the update-fixer agent.",
   "author": {
     "name": "Alexandre Mendes",
